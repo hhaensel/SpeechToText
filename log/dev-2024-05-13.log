@@ -1,0 +1,75 @@
+┌ Info: 2024-05-13 11:44:00 
+│ Web Server starting at http://127.0.0.1:8000 
+└ @ Genie.Server /Users/pere/.julia/packages/Genie/w41yU/src/Server.jl:182
+┌ Info: 2024-05-13 11:44:01 Watching ["/Users/pere/genie/mwes/speech"]
+└ @ GenieAutoReload /Users/pere/.julia/packages/GenieAutoReload/ESvsh/src/GenieAutoReload.jl:19
+┌ Info: 2024-05-13 11:44:01 Listening on: 127.0.0.1:8000, thread id: 1
+└ @ HTTP.Servers /Users/pere/.julia/packages/HTTP/sJD5V/src/Servers.jl:382
+┌ Info: 2024-05-13 11:44:02 
+│ Web Sockets server starting at 127.0.0.1:8000 
+└ @ Genie.Server /Users/pere/.julia/packages/Genie/w41yU/src/Server.jl:182
+┌ Info: 2024-05-13 11:44:53 
+│ Web Server starting at http://127.0.0.1:8000 
+└ @ Genie.Server /Users/pere/.julia/packages/Genie/w41yU/src/Server.jl:182
+┌ Info: 2024-05-13 11:44:53 Watching ["/Users/pere/genie/mwes/speech"]
+└ @ GenieAutoReload /Users/pere/.julia/packages/GenieAutoReload/ESvsh/src/GenieAutoReload.jl:19
+┌ Info: 2024-05-13 11:44:53 Listening on: 127.0.0.1:8000, thread id: 1
+└ @ HTTP.Servers /Users/pere/.julia/packages/HTTP/sJD5V/src/Servers.jl:382
+┌ Info: 2024-05-13 11:44:55 
+│ Web Sockets server starting at 127.0.0.1:8000 
+└ @ Genie.Server /Users/pere/.julia/packages/Genie/w41yU/src/Server.jl:182
+┌ Info: 2024-05-13 11:45:02 Autoreloading
+└ @ GenieAutoReload /Users/pere/.julia/packages/GenieAutoReload/ESvsh/src/GenieAutoReload.jl:22
+┌ Info: 2024-05-13 11:45:08 
+│ Web Server starting at http://127.0.0.1:8001 
+└ @ Genie.Server /Users/pere/.julia/packages/Genie/w41yU/src/Server.jl:182
+┌ Info: 2024-05-13 11:45:08 Listening on: 127.0.0.1:8001, thread id: 1
+└ @ HTTP.Servers /Users/pere/.julia/packages/HTTP/sJD5V/src/Servers.jl:382
+┌ Info: 2024-05-13 11:45:17 I am alive!
+└ @ Main.App /Users/pere/genie/mwes/speech/app.jl:27
+┌ Info: 2024-05-13 11:56:45 Autoreloading
+└ @ GenieAutoReload /Users/pere/.julia/packages/GenieAutoReload/ESvsh/src/GenieAutoReload.jl:22
+┌ Info: 2024-05-13 11:56:49 I am alive!
+└ @ Main.App /Users/pere/genie/mwes/speech/app.jl:27
+┌ Info: 2024-05-13 11:57:36 Autoreloading
+└ @ GenieAutoReload /Users/pere/.julia/packages/GenieAutoReload/ESvsh/src/GenieAutoReload.jl:22
+┌ Info: 2024-05-13 11:57:37 I am alive!
+└ @ Main.App /Users/pere/genie/mwes/speech/app.jl:27
+┌ Info: 2024-05-13 11:57:54 Watching ["/Users/pere/genie/mwes/speech"]
+└ @ GenieAutoReload /Users/pere/.julia/packages/GenieAutoReload/ESvsh/src/GenieAutoReload.jl:19
+┌ Info: 2024-05-13 11:57:58 I am alive!
+└ @ Main.App /Users/pere/genie/mwes/speech/app.jl:27
+┌ Info: 2024-05-13 11:58:14 Autoreloading
+└ @ GenieAutoReload /Users/pere/.julia/packages/GenieAutoReload/ESvsh/src/GenieAutoReload.jl:22
+┌ Info: 2024-05-13 11:58:16 I am alive!
+└ @ Main.App /Users/pere/genie/mwes/speech/app.jl:27
+┌ Info: 2024-05-13 11:58:17 Watching ["/Users/pere/genie/mwes/speech"]
+└ @ GenieAutoReload /Users/pere/.julia/packages/GenieAutoReload/ESvsh/src/GenieAutoReload.jl:19
+┌ Info: 2024-05-13 11:58:20 I am alive!
+└ @ Main.App /Users/pere/genie/mwes/speech/app.jl:27
+┌ Info: 2024-05-13 11:58:42 Autoreloading
+└ @ GenieAutoReload /Users/pere/.julia/packages/GenieAutoReload/ESvsh/src/GenieAutoReload.jl:22
+┌ Info: 2024-05-13 11:58:44 I am alive!
+└ @ Main.App /Users/pere/genie/mwes/speech/app.jl:27
+┌ Info: 2024-05-13 11:58:45 Watching ["/Users/pere/genie/mwes/speech"]
+└ @ GenieAutoReload /Users/pere/.julia/packages/GenieAutoReload/ESvsh/src/GenieAutoReload.jl:19
+┌ Info: 2024-05-13 11:58:51 I am alive!
+└ @ Main.App /Users/pere/genie/mwes/speech/app.jl:27
+┌ Info: 2024-05-13 11:59:00 Autoreloading
+└ @ GenieAutoReload /Users/pere/.julia/packages/GenieAutoReload/ESvsh/src/GenieAutoReload.jl:22
+┌ Info: 2024-05-13 11:59:03 I am alive!
+└ @ Main.App /Users/pere/genie/mwes/speech/app.jl:27
+┌ Info: 2024-05-13 11:59:05 Watching ["/Users/pere/genie/mwes/speech"]
+└ @ GenieAutoReload /Users/pere/.julia/packages/GenieAutoReload/ESvsh/src/GenieAutoReload.jl:19
+┌ Info: 2024-05-13 11:59:09 I am alive!
+└ @ Main.App /Users/pere/genie/mwes/speech/app.jl:27
+┌ Info: 2024-05-13 11:59:27 Autoreloading
+└ @ GenieAutoReload /Users/pere/.julia/packages/GenieAutoReload/ESvsh/src/GenieAutoReload.jl:22
+┌ Info: 2024-05-13 11:59:29 Watching ["/Users/pere/genie/mwes/speech"]
+└ @ GenieAutoReload /Users/pere/.julia/packages/GenieAutoReload/ESvsh/src/GenieAutoReload.jl:19
+┌ Info: 2024-05-13 11:59:34 I am alive!
+└ @ Main.App /Users/pere/genie/mwes/speech/app.jl:27
+┌ Info: 2024-05-13 12:02:24 Autoreloading
+└ @ GenieAutoReload /Users/pere/.julia/packages/GenieAutoReload/ESvsh/src/GenieAutoReload.jl:22
+┌ Info: 2024-05-13 12:02:27 I am alive!
+└ @ Main.App /Users/pere/genie/mwes/speech/app.jl:27
