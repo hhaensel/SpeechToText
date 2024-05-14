@@ -3,6 +3,7 @@ using GenieFramework
 using GenieFramework.JSON3
 using GenieFramework.Stipple.HTTP
 using GenieFramework.Stipple.ModelStorage.Sessions# for @init
+using GenieFramework.StippleUI.Uploaders
 using Base64
 @genietools
 
