@@ -10,70 +10,103 @@ using Base64
 
 function openai_whisper(file)
     url = "https://api.openai.com/v1/audio/transcriptions"
-    headers = ["Authorization" => "Bearer $(ENV["OPENAI_API_KEY"])"]
-    form = HTTP.Forms.Form(Dict(
-        "file" => open(file), "model" => "whisper-1"))
-    response = HTTP.post(url, headers, form)
-    transcription = JSON3.read(response.body)["text"]
+    headers = ["Authorization" => "Bearer $(get(ENV, "OPENAI_API_KEY", ""))"]
+    f = open(file)
+    form = HTTP.Forms.Form(Dict("file" => f, "model" => "whisper-1"))
+    response = HTTP.post(url, headers, form, status_exception = false)
+    transcription = response.status == 200 ? JSON3.read(response.body)["text"] : JSON3.read(response.body)[:error][:message]
+    close(f)
     return transcription
 end
 
 @app begin
-    @in input = "Record some audio to see the transcript here."
-    @in audio_chunks = []
+    @in input = ""
     @in mediaRecorder = nothing
     @in is_recording = false
+    @in show_uploader = false
+    @in clear_input = false
+    @out audio_chunks = []
+    
     @onchange isready begin
         @info "I am alive!"
     end
-    @event uploaded begin
-        @info "File uploaded!!"
-        @info params(:payload)["event"]
-        notify(__model__, "File uploaded!")
+
+    @onbutton clear_input begin
+        input = ""
     end
+
+    @event uploaded begin
+        @info "Event :uploaded\n$event"
+        @notify """File(s) '$(join([f["name"] for f in event["files"]], "', '"))' uploaded!"""
+    end
+
     @onchange fileuploads begin
-        if !isempty(fileuploads)
-            @info "File was uploaded: " fileuploads["path"]
-            filename = base64encode(fileuploads["name"])
-            try
-                fn_new = fileuploads["path"] * ".wav"
-                mv(fileuploads["path"], fn_new; force = true)
-                input = openai_whisper(fn_new)
-                rm(fn_new; force = true)
-            catch e
-                @error "Error processing file: $e"
-                notify(__model__, "Error processing file: $(fileuploads["name"])")
-                "FAIL!"
-            end
-            fileuploads = Dict{AbstractString, AbstractString}()
+        isempty(fileuploads) && return
+        @info "File was uploaded: " fileuploads["path"]
+        try
+            fn_new = fileuploads["path"] * ".wav"
+            mv(fileuploads["path"], fn_new; force = true)
+            input = strip(input * " " * openai_whisper(fn_new))
+            rm(fn_new; force = true)
+        catch e
+            @error "Error processing file: $e"
+            notify(__model__, "Error processing file: $(fileuploads["name"])")
+            "FAIL!"
         end
+        @run raw"this.$refs.uploader.reset()"
+        audio_chunks = []
+        empty!(fileuploads)
     end
 end
+
+@client_data begin
+    channel_ = ""
+end
+
+# add a toJSON method for File objects
+@mounted """
+File.prototype.toJSON = function() {
+    return {
+        lastModified: this.lastModified,
+        name: this.name,
+        size: this.size,
+        type: this.type,
+        webkitRelativePath: this.webkitRelativePath
+    };
+}
+"""
 
 function ui()
     [
-        h3("Speech-to-text API"),
-        h6("Transcript: "),
-        card(p("{{input}}")),
-        btn(@click("toggleRecording"),
-            label = R"is_recording ? 'Stop' : 'Record'",
-            color = R"is_recording ? 'negative' : 'primary'"
-        ),
-        uploader(multiple = false,
-            maxfiles = 10,
+        h3("Speech-to-text API")
+
+        row(class = "q-mt-xl", [
+            btn(@click("toggleRecording"),
+                # label = R"is_recording ? 'Stop' : 'Record'",
+                icon = R"is_recording ? 'mic_off' : 'mic'",
+                color = R"is_recording ? 'negative' : 'primary'"
+            )
+
+            btn(class = "q-ml-lg", @click(:clear_input), icon = "delete_forever", color = "primary")
+            
+            toggle(class = "q-ml-lg", "Show uploader", :show_uploader)
+        ])
+        
+        textfield(class = "q-mt-lg", "Input", :input, type = "textarea", :standout)
+
+        uploader("", class = "q-mt-lg",
+            label = "Audio Upload",
             autoupload = true,
             hideuploadbtn = true,
-            label = "Upload",
             nothumbnails = true,
-            ref = "uploader",
-            style = "display: none; visibility: hidden;",
-            @on("uploaded", :uploaded)
+            @showif("show_uploader"),
+            @on(:uploaded, :uploaded),
+            ref = "uploader"
         )
-    ]
+    ] |> htmldiv # wrap in htmldiv in order to avoid stipplecore formatting of first-level rows
 end
 
-@methods begin
-    raw"""
+@methods raw"""
     async toggleRecording() {
         if (!this.is_recording) {
           this.startRecording()
@@ -84,25 +117,22 @@ end
     async startRecording() {
       navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
-          this.is_recording = true
-          this.mediaRecorder = new MediaRecorder(stream);
-          this.mediaRecorder.start();
-          this.mediaRecorder.onstop = () => {
-            const audioBlob = new Blob(this.audio_chunks, { type: 'audio/wav' });
-            this.is_recording = false;
-
-            // upload via uploader
-            const file = new File([audioBlob], 'test.wav');
-            this.$refs.uploader.addFiles([file], 'test.wav');
-            this.$refs.uploader.upload(); // Trigger the upload
-            console.log("Uploaded WAV");
-            this.$refs.uploader.reset();
-            this.audio_chunks=[];
-
-          };
-          this.mediaRecorder.ondataavailable = event => {
-            this.audio_chunks.push(event.data);
-          };
+            this.mediaRecorder = new MediaRecorder(stream);
+            this.mediaRecorder.onstart = () => { this.is_recording = true };
+            this.mediaRecorder.onstop = () => { this.is_recording = false };
+            this.mediaRecorder.start();
+            this.mediaRecorder.ondataavailable = event => {
+                console.log('data available: ', event.data.size, 'bytes');
+                this.audio_chunks.push(event.data);
+                const audioBlob = new Blob(this.audio_chunks, { type: 'audio/wav' });
+                
+                // upload via uploader
+                const filename = 'audio.wav';
+                const file = new File([audioBlob], filename);
+                this.$refs.uploader.addFiles([file]);
+                // this.$refs.uploader.upload(); // not necessary as auto-upload is enabled
+                console.log(`Uploading audio as '${filename}' ...`);
+            };
         })
         .catch(error => console.error('Error accessing microphone:', error));
     },
@@ -114,9 +144,9 @@ end
       }
     }
 """
-end
 
-@page("/",ui())
+@page("/", ui)
 
+up(open_browser = true)
 
 end
